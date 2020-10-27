@@ -1,11 +1,18 @@
   
 from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask import Markup 
+import csv
+from reportlab.pdfgen import canvas
+
+
 name=""
 contraseña=""
 app = Flask(__name__)
 global cliente
 cliente=[]
+global aplicaciones
+aplicaciones=[]
+
 usu="admin"
 ape="Maestro"
 nom="Usuario"
@@ -71,7 +78,79 @@ def recuperar():
             else:
                 flash("USUARIO NO EXISTE") 
                 return render_template('principal.html') 
+
+
+@app.route('/carga',methods=["GET", "POST"])
+def carga():
+    if request.method=='POST':
+        a=request.form['file']
+        with open(""+a) as File:
+            reader = csv.reader(File, delimiter=',', quotechar=',',quoting=csv.QUOTE_MINIMAL)
+            for row in reader:
+                aplicaciones.append(row)  
+
+    flash("CARGA EXITOSA")
+    print(aplicaciones)
+    return render_template('admo.html')
+
+@app.route('/pdf1',methods=["GET", "POST"])
+def pdf1():
+    if request.method=='POST':
+        p = canvas.Canvas("inicio.pdf")
+        mama=0
+        for i in range(len(aplicaciones)):
+            p.drawString(5, mama, ""+str(aplicaciones[i]))
+            mama=mama+30
+        p.showPage()
+        p.save()
+    return render_template('admo.html') 
+
+@app.route('/eliminar_apli/<string:id>', methods = ['POST','GET'])
+def delete_contact(id):
+    for i in range(len(aplicaciones)):
+        if aplicaciones[i][0]==str(id):
+            aplicaciones.pop(i)
+            break
         
+    flash('DATO ELIMINADO')
+    return render_template('admo.html')
+
+
+@app.route('/modificar_apli/<string:id>', methods = ['POST','GET'])
+def modificar_contact(id):
+    y=0
+    for i in range(len(aplicaciones)):
+        if aplicaciones[i][0]==str(id):
+            y=i
+            break
+
+    return render_template('admo2.html', contact = aplicaciones[y])
+
+
+@app.route('/modificar',methods=["GET", "POST"])
+def modificar_aplicacion():
+    if request.method=='POST':
+        ax=request.form['u']
+        a=request.form['u1']
+        b=request.form['u2']
+        c=request.form['u3']
+        d=request.form['u4']
+        e=request.form['u5']
+        f=request.form['u6']
+        g=request.form['u7']
+        h=request.form['u8']
+        for i in range(len(aplicaciones)):
+            if aplicaciones[i][0]==ax:
+                aplicaciones.pop(i)
+                break
+    aplicaciones.append([str(a),str(b),str(c),str(d),str(e),str(f),str(g),str(h)])
+    flash('DATO MODIFICADO')
+    return render_template('admo.html')
+
+
+
+
+
 
 
 
@@ -92,7 +171,22 @@ def ir_login():
 def ir_recuperar():
     if request.method=='POST':
         return render_template('recuperar.html') 
-    
+
+
+@app.route('/ir_admo',methods=["GET", "POST"])
+def ir_admo():
+    if request.method=='POST':
+        return render_template('admo.html') 
+
+@app.route('/ir_tabla1',methods=["GET", "POST"])
+def ir_admo1():
+    if request.method=='POST':
+        return render_template('admo1.html',contacts=aplicaciones) 
+
+
+
+
+ 
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key' 

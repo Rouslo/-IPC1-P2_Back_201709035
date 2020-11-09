@@ -15,8 +15,10 @@ aplicaciones=[]
 global adm
 adm=[]
 
-global reseñas
-reseñas=[]
+usu="admin"
+ape="Maestro"
+nom="Usuario"
+contra="admin"
 
 
 
@@ -31,8 +33,8 @@ reseñas=[]
 
 @app.route('/')
 def main_page():
-    adm.append(["Usuario","Maestro","admin","admin"])
-    return render_template('principal.html')
+    cliente.append(["Usuario","Maestro","admin","admin"])
+    return render_template('admo.html')
 
 @app.route('/insertar',methods=["GET", "POST"])
 def add_contact():
@@ -99,16 +101,20 @@ def ver_login():
                 return render_template('admo.html')
         
         else:
-            for i in range(len(cliente)):
-                if cliente[i][2]==a and cliente[i][3]==b:
-                    estado=True
-
+        for i in range(len(cliente)):
+            if cliente[i][2]==a and cliente[i][3]==b:
+                estado=True
+        if(a==usu and b==contra):
+            flash("BIENVENIDO ADMO") 
+            return render_template('principal.html')
+        
+        else:
             if(estado==False):
                 flash("USUARIO NO EXISTE") 
                 return render_template('principal.html') 
             else:
                 flash("BIENVENIDO") 
-                return render_template('cliente1.html',contacts = aplicaciones) 
+                return render_template('login.html') 
 
 @app.route('/recuperar',methods=["GET", "POST"])
 def recuperar():
@@ -123,10 +129,7 @@ def recuperar():
                 flash("USUARIO NO EXISTE") 
                 return render_template('principal.html') 
 
-# --------------------------------------------------------------------------------funciones admo-------------
-# --------------------------------------------------------------------------------funciones admo-------------
-# --------------------------------------------------------------------------------funciones admo-------------
-# --------------------------------------------------------------------------------funciones admo-------------
+
 @app.route('/carga',methods=["GET", "POST"])
 def carga():
     if request.method=='POST':
@@ -196,7 +199,7 @@ def modificar_contact(id):
             y=i
             break
 
-    return render_template('admo2.html', contacts = aplicaciones[y])
+    return render_template('admo2.html', contact = aplicaciones[y])
 
 
 @app.route('/modificar',methods=["GET", "POST"])
@@ -249,8 +252,7 @@ def likes(id):
             aplicaciones.append([aplicaciones[i][0],aplicaciones[i][1],aplicaciones[i][2],aplicaciones[i][3],aplicaciones[i][4],aplicaciones[i][5],aplicaciones[i][6],str(a)])
             aplicaciones.pop(i)
             break
-        
-    return render_template('cliente1.html',contacts = aplicaciones)
+
 
 
 
@@ -283,7 +285,7 @@ def ir_admo():
 @app.route('/ir_tabla1',methods=["GET", "POST"])
 def ir_admo1():
     if request.method=='POST':
-        return render_template('admo1.html',contacts=aplicaciones)
+        return render_template('admo1.html',contacts=aplicaciones) 
 
     if request.method=='GET':
         return render_template('admo1.html',contacts=cliente) 

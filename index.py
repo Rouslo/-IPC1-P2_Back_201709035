@@ -49,6 +49,7 @@ def add_contact():
             return render_template('registro.html')
 
 @app.route('/guardar_admo',methods=["GET", "POST"])
+
 def agregaradmo():
     estado=False
     if request.method=='POST':
@@ -70,6 +71,7 @@ def agregaradmo():
 
 
 @app.route('/leer',methods=["GET", "POST"])
+
 def ver_login():
     estado=False
     estado1=False
@@ -105,6 +107,7 @@ def ver_login():
                 return render_template('cliente1.html',contacts = aplicaciones) 
 
 @app.route('/recuperar',methods=["GET", "POST"])
+
 def recuperar():
     if request.method=='POST':
         a=request.form['u1']
@@ -122,6 +125,7 @@ def recuperar():
 # --------------------------------------------------------------------------------funciones admo-------------
 # --------------------------------------------------------------------------------funciones admo-------------
 @app.route('/carga',methods=["GET", "POST"])
+
 def carga():
     if request.method=='POST':
         a=request.form['file']
@@ -135,6 +139,7 @@ def carga():
     return render_template('admo.html')
 
 @app.route('/cargacliente',methods=["GET", "POST"])
+
 def cargacliente():
     if request.method=='POST':
         a=request.form['file']
@@ -148,6 +153,7 @@ def cargacliente():
 
 
 @app.route('/pdf1',methods=["GET", "POST"])
+
 def pdf1():
     if request.method=='POST':
         p = canvas.Canvas("inicio.pdf")
@@ -160,6 +166,7 @@ def pdf1():
     return render_template('admo.html') 
 
 @app.route('/pdf2',methods=["GET", "POST"])
+
 def pdf2():
     if request.method=='POST':
         p = canvas.Canvas("clientes.pdf")
@@ -172,6 +179,7 @@ def pdf2():
     return render_template('admo.html') 
 
 @app.route('/eliminar_apli/<string:id>', methods = ['POST','GET'])
+
 def delete_contact(id):
     for i in range(len(aplicaciones)):
         if aplicaciones[i][0]==str(id):
@@ -183,6 +191,7 @@ def delete_contact(id):
 
 
 @app.route('/modificar_apli/<string:id>', methods = ['POST','GET'])
+
 def modificar_contact(id):
     y=0
     for i in range(len(aplicaciones)):
@@ -190,10 +199,11 @@ def modificar_contact(id):
             y=i
             break
 
-    return render_template('admo2.html', contacts = aplicaciones[y])
+    return render_template('admo2.html', contact = aplicaciones[y])
 
 
 @app.route('/modificar',methods=["GET", "POST"])
+
 def modificar_aplicacion():
     if request.method=='POST':
         ax=request.form['u']
@@ -215,6 +225,7 @@ def modificar_aplicacion():
 
 
 @app.route('/reseña/<string:id>', methods = ['POST','GET'])
+
 def rese(id):
     y=0
     for i in range(len(aplicaciones)):
@@ -222,20 +233,22 @@ def rese(id):
             y=i
             break
 
-    return render_template('cliente2.html', contact = aplicaciones[y])
+    return render_template('cliente2.html', contacts = reseñas)
 
 
 @app.route('/insertar_reseña',methods=["GET", "POST"])
+
 def insereseña():
     if request.method=='POST':
         a=request.form['u1']
     reseñas.append([str(a)])
     flash('RESEÑA AGREGADA')
-    return render_template('cliente1.html')
+    return render_template('cliente1.html',contacts = aplicaciones)
 
 
 
 @app.route('/likes/<string:id>', methods = ['POST','GET'])
+
 def likes(id):
     for i in range(len(aplicaciones)):
         if aplicaciones[i][0]==str(id):
@@ -297,6 +310,16 @@ def cerrar():
     if request.method=='POST':
         return render_template('principal.html') 
 
+
+@app.route('/contacto',methods=["GET", "POST"])
+def contacto():
+    if request.method=='POST':
+        return render_template('contacto.html') 
+
+@app.route('/video',methods=["GET", "POST"])
+def video():
+    if request.method=='POST':
+        return "https://youtu.be/TQGmi9EclpY"
 
 
 
